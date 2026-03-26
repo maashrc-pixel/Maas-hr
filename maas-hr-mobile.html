@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>MAAS HR · Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --p:#1A6EFF; --p2:#4D91FF; --p3:rgba(26,110,255,.1);
+  --bg:#F5F7FA; --bg2:#fff; --bg3:#F0F3F8;
+  --dark:#0A0F1E; --dark2:#1C2340; --dark3:#2D3561;
+  --text:#0A0F1E; --muted:#8892A4; --muted2:#C4CDD8;
+  --green:#00C48C; --red:#FF5C5C; --orange:#FF9900; --purple:#7B61FF;
+  --border:#E8ECF4; --shadow:0 2px 16px rgba(10,15,30,.08);
+  --radius:16px; --radius-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;overflow:hidden;}
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:2px;}
+
+/* SHELL */
+#shell{display:flex;flex-direction:column;height:100vh;max-width:430px;margin:0 auto;background:var(--bg);position:relative;box-shadow:0 0 60px rgba(0,0,0,.15);}
+#screen{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:80px;}
+
+/* TOP HEADER */
+#header{background:var(--dark);padding:16px 20px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+#header-title{color:#fff;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;}
+#header-sub{color:rgba(255,255,255,.45);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;}
+.header-icon{width:36px;height:36px;background:rgba(255,255,255,.08);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+.header-icon svg{width:18px;height:18px;stroke:#fff;fill:none;}
+
+/* BOTTOM NAV */
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100;padding:8px 4px 16px;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 4px;border-radius:10px;transition:.2s;border:none;background:none;}
+.nav-btn svg{width:20px;height:20px;stroke:var(--muted);fill:none;transition:.2s;}
+.nav-btn span{font-size:.58rem;color:var(--muted);font-weight:500;letter-spacing:.3px;transition:.2s;}
+.nav-btn.active svg{stroke:var(--p);}
+.nav-btn.active span{color:var(--p);}
+.nav-dot{width:4px;height:4px;background:var(--p);border-radius:50%;position:absolute;bottom:6px;}
+
+/* CARDS */
+.card{background:var(--bg2);border-radius:var(--radius);padding:16px;margin:0 16px 12px;box-shadow:var(--shadow);}
+.card-sm{background:var(--bg2);border-radius:var(--radius-sm);padding:14px;}
+.section-title{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:16px 20px 8px;}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:4px;}
+.stat-card{border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;}
+.stat-card.blue{background:linear-gradient(135deg,#1A6EFF,#4D91FF);}
+.stat-card.dark{background:linear-gradient(135deg,var(--dark),var(--dark2));}
+.stat-card.green{background:linear-gradient(135deg,#00C48C,#00E5A8);}
+.stat-card.orange{background:linear-gradient(135deg,#FF9900,#FFB740);}
+.stat-label{font-size:.65rem;color:rgba(255,255,255,.7);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.8rem;color:#fff;font-weight:700;line-height:1;}
+.stat-sub{font-size:.68rem;color:rgba(255,255,255,.6);margin-top:4px;}
+.stat-icon{position:absolute;right:14px;top:14px;width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.stat-icon svg{width:16px;height:16px;stroke:#fff;fill:none;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.65rem;font-weight:600;letter-spacing:.3px;}
+.badge-blue{background:rgba(26,110,255,.1);color:var(--p);}
+.badge-green{background:rgba(0,196,140,.1);color:var(--green);}
+.badge-orange{background:rgba(255,153,0,.1);color:var(--orange);}
+.badge-red{background:rgba(255,92,92,.1);color:var(--red);}
+.badge-purple{background:rgba(123,97,255,.1);color:var(--purple);}
+.badge-muted{background:var(--bg3);color:var(--muted);}
+
+/* LIST ITEMS */
+.list-item{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--bg2);cursor:pointer;transition:.15s;border-bottom:1px solid var(--border);}
+.list-item:last-child{border-bottom:none;}
+.list-item:hover,.list-item:active{background:var(--bg3);}
+.item-avatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;flex-shrink:0;}
+.item-body{flex:1;min-width:0;}
+.item-name{font-weight:600;font-size:.88rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-sub{font-size:.72rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.item-chevron{width:16px;height:16px;stroke:var(--muted2);fill:none;}
+
+/* SEARCH */
+.search-wrap{padding:12px 16px;position:sticky;top:64px;z-index:40;background:var(--bg);}
+.search-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow);}
+.search-box svg{width:16px;height:16px;stroke:var(--muted);fill:none;flex-shrink:0;}
+.search-box input{border:none;outline:none;background:transparent;font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--text);flex:1;}
+.search-box input::placeholder{color:var(--muted);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;transition:.15s;border-radius:12px;}
+.btn-primary{background:var(--p);color:#fff;padding:13px 20px;font-size:.88rem;width:100%;}
+.btn-primary:active{background:#1560e0;}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text);padding:10px 16px;font-size:.82rem;}
+.btn-ghost{background:var(--bg3);color:var(--text);padding:10px 16px;font-size:.82rem;}
+.btn-danger{background:rgba(255,92,92,.1);border:1.5px solid var(--red);color:var(--red);padding:10px 16px;font-size:.82rem;}
+.btn-sm{padding:7px 14px;font-size:.78rem;border-radius:8px;}
+.fab{position:fixed;bottom:88px;right:calc(50% - 215px + 16px);width:52px;height:52px;background:var(--p);border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(26,110,255,.4);cursor:pointer;border:none;z-index:90;}
+.fab svg{width:22px;height:22px;stroke:#fff;fill:none;}
+
+/* FORM */
+.form-wrap{padding:0 16px;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;display:block;}
+.form-input{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--text);outline:none;transition:.15s;}
+.form-input:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--p3);}
+.form-input::placeholder{color:var(--muted2);}
+select.form-input{cursor:pointer;}
+textarea.form-input{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-section{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;color:var(--p);letter-spacing:2px;text-transform:uppercase;margin:20px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--p3);}
+
+/* DETAIL VIEW */
+.detail-header{background:linear-gradient(160deg,var(--dark),var(--dark2));padding:24px 20px 20px;margin-bottom:0;}
+.detail-avatar{width:60px;height:60px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:12px;}
+.detail-name{color:#fff;font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;}
+.detail-sub{color:rgba(255,255,255,.5);font-size:.78rem;margin-top:3px;}
+.detail-badges{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.info-label{font-size:.75rem;color:var(--muted);font-weight:500;}
+.info-val{font-size:.82rem;font-weight:600;color:var(--text);text-align:right;max-width:55%;}
+
+/* INVOICE */
+.invoice-header{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:var(--radius);padding:20px;margin:0 16px 12px;color:#fff;}
+.invoice-num{font-family:'Syne',sans-serif;font-size:.7rem;letter-spacing:2px;opacity:.5;text-transform:uppercase;}
+.invoice-amount{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin:6px 0;}
+.invoice-line{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:.82rem;}
+.invoice-total{display:flex;justify-content:space-between;padding:12px 0;font-weight:700;font-size:.95rem;color:var(--p);}
+
+/* WHATSAPP */
+.wa-template{background:var(--bg2);border-radius:var(--radius);margin:0 16px 12px;overflow:hidden;box-shadow:var(--shadow);}
+.wa-header{background:#25D366;padding:12px 16px;display:flex;align-items:center;gap:8px;}
+.wa-header svg{width:18px;height:18px;fill:#fff;}
+.wa-header span{color:#fff;font-weight:600;font-size:.85rem;}
+.wa-body{padding:14px 16px;}
+.wa-text{background:#ECF8F1;border-radius:0 12px 12px 12px;padding:12px;font-size:.82rem;line-height:1.6;color:var(--text);white-space:pre-wrap;border-left:3px solid #25D366;}
+.wa-actions{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);}
+
+/* CHECKLIST */
+.check-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;}
+.check-item:last-child{border-bottom:none;}
+.check-item:active{background:var(--bg3);}
+.check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--muted2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;}
+.check-box.checked{background:var(--green);border-color:var(--green);}
+.check-box svg{width:12px;height:12px;stroke:#fff;fill:none;display:none;}
+.check-box.checked svg{display:block;}
+.check-label{font-size:.85rem;font-weight:500;}
+.check-label.done{text-decoration:line-through;color:var(--muted);}
+.check-category{font-size:.65rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* TASK */
+.task-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--bg2);border-bottom:1px solid var(--border);transition:.15s;}
+.task-item:active{background:var(--bg3);}
+.task-priority{width:4px;border-radius:2px;align-self:stretch;flex-shrink:0;}
+.task-body{flex:1;}
+.task-title{font-size:.85rem;font-weight:600;}
+.task-meta{font-size:.72rem;color:var(--muted);margin-top:3px;}
+.task-done .task-title{text-decoration:line-through;color:var(--muted);}
+
+/* MODAL SHEET */
+#sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+#sheet-overlay.open{display:flex;}
+#sheet{background:var(--bg2);border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;padding:12px 0 32px;}
+.sheet-handle{width:36px;height:4px;background:var(--muted2);border-radius:2px;margin:0 auto 16px;}
+.sheet-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;padding:0 20px 16px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+
+/* TOAST */
+#toast-wrap{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:8px;width:100%;max-width:398px;padding:0 16px;}
+.toast{padding:12px 16px;border-radius:12px;font-size:.82rem;font-weight:500;animation:toastIn .3s ease;box-shadow:0 4px 20px rgba(0,0,0,.15);}
+.toast.ok{background:var(--dark);color:#fff;}
+.toast.err{background:var(--red);color:#fff;}
+@keyframes toastIn{from{transform:translateY(-20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* PROFILE COLORS */
+.av-blue{background:rgba(26,110,255,.12);color:var(--p);}
+.av-green{background:rgba(0,196,140,.12);color:var(--green);}
+.av-orange{background:rgba(255,153,0,.12);color:var(--orange);}
+.av-purple{background:rgba(123,97,255,.12);color:var(--purple);}
+.av-red{background:rgba(255,92,92,.12);color:var(--red);}
+
+/* TRANSITIONS */
+#screen{transition:opacity .15s;}
+.page-enter{animation:pageIn .2s ease;}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* EMPTY */
+.empty{text-align:center;padding:50px 20px;}
+.empty-icon{font-size:3rem;margin-bottom:12px;}
+.empty-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:6px;}
+.empty-sub{font-size:.8rem;color:var(--muted);line-height:1.5;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:8px 0;}
+.gap{height:12px;}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="header">
+    <div>
+      <div id="header-title">MAAS HR</div>
+      <div id="header-sub">UAE Consultancy</div>
+    </div>
+    <button class="header-icon" onclick="openSearch()">
+      <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+
+  <div id="screen"></div>
+
+  <button class="fab" id="fab" onclick="fabAction()">
+    <svg viewBox="0 0 24 24" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <div id="nav">
+    <button class="nav-btn active" data-page="home" onclick="goPage('home')">
+      <svg viewBox="0 0 24 24" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-page="candidates" onclick="goPage('candidates')">
+      <svg viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Candidates</span>
+    </button>
+    <button class="nav-btn" data-page="employers" onclick="goPage('employers')">
+      <svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      <span>Employers</span>
+    </button>
+    <button class="nav-btn" data-page="invoices" onclick="goPage('invoices')">
+      <svg viewBox="0 0 24 24" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span>Invoices</span>
+    </button>
+    <button class="nav-btn" data-page="more" onclick="goPage('more')">
+      <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      <span>More</span>
+    </button>
+  </div>
+</div>
+
+<!-- BOTTOM SHEET -->
+<div id="sheet-overlay" onclick="closeSheet()">
+  <div id="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheet-title"></div>
+    <div id="sheet-body"></div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script>
+// ═══ DATA ═══
+const DB = 'maas_mobile_v1';
+function load(){try{return JSON.parse(localStorage.getItem(DB))||{candidates:[],employers:[],invoices:[],tasks:[],checklists:{}}}catch(e){return{candidates:[],employers:[],invoices:[],tasks:[],checklists:{}}}}
+function save(){localStorage.setItem(DB,JSON.stringify(db))}
+let db = load();
+let curPage = 'home';
+let curDetail = null;
+
+// ═══ UTILS ═══
+function uid(p=''){return p+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase()}
+function fmt(v){return v||'—'}
+function fmtAED(n){if(!n&&n!==0)return'—';return'AED '+parseFloat(n||0).toLocaleString('en-AE')}
+function fmtDate(d){if(!d)return'—';return new Date(d).toLocaleDateString('en-AE',{day:'2-digit',month:'short',year:'numeric'})}
+function initials(n){if(!n)return'?';return n.trim().split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?'}
+const avColors=['av-blue','av-green','av-orange','av-purple','av-red'];
+function avColor(s){let h=0;for(let c of(s||''))h=(h*31+c.charCodeAt(0))&0xffff;return avColors[h%avColors.length]}
+function toast(msg,type='ok'){const el=document.createElement('div');el.className=`toast ${type}`;el.textContent=msg;document.getElementById('toast-wrap').appendChild(el);setTimeout(()=>el.remove(),2800)}
+
+function statusBadge(s){
+  const m={Active:'badge-green',Deployed:'badge-blue',Pending:'badge-orange',Interview:'badge-purple',Offer:'badge-purple',Rejected:'badge-red','On Hold':'badge-muted',Completed:'badge-green'};
+  return `<span class="badge ${m[s]||'badge-muted'}">${s||'—'}</span>`;
+}
+
+// ═══ NAVIGATION ═══
+function goPage(page, data=null){
+  curPage=page; curDetail=data;
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  const fabPages={candidates:true,employers:true,invoices:true,tasks:true};
+  document.getElementById('fab').style.display=fabPages[page]?'flex':'none';
+  const titles={home:'MAAS HR',candidates:'Candidates',employers:'Employers',invoices:'Invoices',more:'More Tools',tasks:'Tasks',whatsapp:'WhatsApp Templates',checklist:'Document Checklist','add-candidate':'Add Candidate','add-employer':'Add Employer','add-invoice':'New Invoice','add-task':'Add Task','candidate-detail':'Candidate','employer-detail':'Employer','invoice-detail':'Invoice'};
+  document.getElementById('header-title').textContent=titles[page]||'MAAS HR';
+  const screen=document.getElementById('screen');
+  screen.innerHTML=renderPage(page,data);
+  screen.scrollTop=0;
+  bindEvents();
+}
+
+function fabAction(){
+  const map={candidates:'add-candidate',employers:'add-employer',invoices:'add-invoice',tasks:'add-task'};
+  if(map[curPage]) goPage(map[curPage]);
+}
+
+function renderPage(page,data){
+  const fns={
+    home:renderHome, candidates:renderCandidates, employers:renderEmployers,
+    invoices:renderInvoices, more:renderMore, tasks:renderTasks,
+    whatsapp:renderWhatsApp, checklist:renderChecklist,
+    'add-candidate':()=>renderCandidateForm(null),
+    'add-employer':()=>renderEmployerForm(null),
+    'add-invoice':()=>renderInvoiceForm(null),
+    'add-task':()=>renderTaskForm(null),
+    'candidate-detail':()=>renderCandidateDetail(data),
+    'employer-detail':()=>renderEmployerDetail(data),
+    'invoice-detail':()=>renderInvoiceDetail(data),
+  };
+  const fn=fns[page];
+  return fn?`<div class="page-enter">${fn()}</div>`:`<div class="empty"><div class="empty-icon">🚧</div><div class="empty-title">Coming Soon</div></div>`;
+}
+
+// ═══ HOME ═══
+function renderHome(){
+  const cs=db.candidates, em=db.employers, inv=db.invoices;
+  const totalRev=inv.reduce((a,i)=>a+parseFloat(i.amount||0),0);
+  const pending=cs.filter(c=>c.status==='Pending').length;
+  const deployed=cs.filter(c=>c.status==='Deployed').length;
+  const openTasks=db.tasks.filter(t=>!t.done).length;
+  const recent=cs.slice().sort((a,b)=>b.created-a.created).slice(0,3);
+
+  return `
+  <div class="gap"></div>
+  <div class="stats-row">
+    <div class="stat-card blue">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+      <div class="stat-label">Candidates</div>
+      <div class="stat-val">${cs.length}</div>
+      <div class="stat-sub">${deployed} deployed</div>
+    </div>
+    <div class="stat-card dark">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+      <div class="stat-label">Employers</div>
+      <div class="stat-val">${em.length}</div>
+      <div class="stat-sub">Active clients</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      <div class="stat-label">Revenue</div>
+      <div class="stat-val">${(totalRev/1000).toFixed(1)}K</div>
+      <div class="stat-sub">AED total</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="stat-label">Pending</div>
+      <div class="stat-val">${pending}</div>
+      <div class="stat-sub">${openTasks} open tasks</div>
+    </div>
+  </div>
+  <div class="gap"></div>
+
+  <div class="section-title">Quick Actions</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:4px;">
+    ${[
+      ['add-candidate','➕','Add Candidate','var(--p)'],
+      ['add-employer','🏢','Add Employer','var(--dark)'],
+      ['whatsapp','💬','WhatsApp','#25D366'],
+      ['checklist','✅','Checklist','var(--purple)'],
+    ].map(([pg,icon,label,color])=>`
+      <button onclick="goPage('${pg}')" style="background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 12px;text-align:left;cursor:pointer;box-shadow:var(--shadow);">
+        <div style="font-size:1.4rem;margin-bottom:6px;">${icon}</div>
+        <div style="font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;color:${color}">${label}</div>
+      </button>`).join('')}
+  </div>
+
+  ${recent.length?`
+  <div class="section-title">Recent Candidates</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${recent.map(c=>`
+      <div class="list-item" onclick="goPage('candidate-detail','${c.id}')">
+        <div class="item-avatar ${avColor(c.name)}">${initials(c.name)}</div>
+        <div class="item-body">
+          <div class="item-name">${fmt(c.name)}</div>
+          <div class="item-sub">${fmt(c.position)} · ${fmt(c.location)}</div>
+        </div>
+        <div class="item-right">${statusBadge(c.status)}</div>
+      </div>`).join('')}
+  </div>`:''}
+
+  ${openTasks>0?`
+  <div class="section-title">Open Tasks <span style="color:var(--red);font-size:.7rem;">${openTasks}</span></div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${db.tasks.filter(t=>!t.done).slice(0,3).map(t=>`
+      <div class="task-item" onclick="goPage('tasks')">
+        <div class="task-priority" style="background:${t.priority==='High'?'var(--red)':t.priority==='Low'?'var(--muted2)':'var(--orange)'}"></div>
+        <div class="task-body">
+          <div class="task-title">${t.title}</div>
+          <div class="task-meta">${t.assignee||'Unassigned'} · ${fmtDate(t.due)}</div>
+        </div>
+        <span class="badge ${t.priority==='High'?'badge-red':t.priority==='Low'?'badge-muted':'badge-orange'}">${t.priority||'Normal'}</span>
+      </div>`).join('')}
+  </div>`:''}
+  <div class="gap"></div>`;
+}
+
+// ═══ CANDIDATES ═══
+function renderCandidates(search=''){
+  let cs=[...db.candidates];
+  if(search) cs=cs.filter(c=>JSON.stringify(c).toLowerCase().includes(search.toLowerCase()));
+  return `
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input placeholder="Search candidates..." oninput="filterList(this,'candidates')" id="cand-search"/>
+    </div>
+  </div>
+  <div style="padding:0 16px;margin-bottom:8px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;">
+    ${['All','Active','Deployed','Pending','Interview'].map(s=>`
+      <button onclick="filterStatus(this,'${s}')" style="white-space:nowrap;padding:6px 14px;border-radius:20px;border:1.5px solid ${s==='All'?'var(--p)':'var(--border)'};background:${s==='All'?'var(--p3)':'transparent'};color:${s==='All'?'var(--p)':'var(--muted)'};font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;" data-filter="${s}">${s}</button>`).join('')}
+  </div>
+  <div id="cand-list">
+  ${cs.length===0?`<div class="empty"><div class="empty-icon">👤</div><div class="empty-title">No Candidates Yet</div><div class="empty-sub">Tap + to add your first candidate</div></div>`:`
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px;">
+    ${cs.map(c=>`
+      <div class="list-item" onclick="goPage('candidate-detail','${c.id}')">
+        <div class="item-avatar ${avColor(c.name)}">${initials(c.name)}</div>
+        <div class="item-body">
+          <div class="item-name">${fmt(c.name)}</div>
+          <div class="item-sub">${fmt(c.position)} · ${fmt(c.employer)}</div>
+        </div>
+        <div class="item-right">
+          ${statusBadge(c.status)}
+          <span style="font-size:.68rem;color:var(--muted)">${fmt(c.location)}</span>
+        </div>
+      </div>`).join('')}
+  </div>`}
+  </div>`;
+}
+
+function filterList(input, type){
+  const q=input.value.toLowerCase();
+  const items=type==='candidates'?db.candidates:db.employers;
+  const filtered=items.filter(i=>JSON.stringify(i).toLowerCase().includes(q));
+  if(type==='candidates'){
+    document.getElementById('cand-list').innerHTML=filtered.length===0
+      ?`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No results</div></div>`
+      :`<div class="card" style="padding:0;overflow:hidden;">${filtered.map(c=>`<div class="list-item" onclick="goPage('candidate-detail','${c.id}')"><div class="item-avatar ${avColor(c.name)}">${initials(c.name)}</div><div class="item-body"><div class="item-name">${fmt(c.name)}</div><div class="item-sub">${fmt(c.position)} · ${fmt(c.employer)}</div></div><div class="item-right">${statusBadge(c.status)}</div></div>`).join('')}</div>`;
+  }
+}
+
+function filterStatus(btn, status){
+  document.querySelectorAll('[data-filter]').forEach(b=>{b.style.background='transparent';b.style.color='var(--muted)';b.style.borderColor='var(--border)';});
+  btn.style.background='var(--p3)';btn.style.color='var(--p)';btn.style.borderColor='var(--p)';
+  const cs=status==='All'?db.candidates:db.candidates.filter(c=>c.status===status);
+  document.getElementById('cand-list').innerHTML=cs.length===0
+    ?`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No ${status} candidates</div></div>`
+    :`<div class="card" style="padding:0;overflow:hidden;">${cs.map(c=>`<div class="list-item" onclick="goPage('candidate-detail','${c.id}')"><div class="item-avatar ${avColor(c.name)}">${initials(c.name)}</div><div class="item-body"><div class="item-name">${fmt(c.name)}</div><div class="item-sub">${fmt(c.position)} · ${fmt(c.employer)}</div></div><div class="item-right">${statusBadge(c.status)}</div></div>`).join('')}</div>`;
+}
+
+// ═══ CANDIDATE DETAIL ═══
+function renderCandidateDetail(id){
+  const c=db.candidates.find(x=>x.id===id);
+  if(!c) return `<div class="empty"><div class="empty-title">Not found</div></div>`;
+  const v=f=>c[f]||'—';
+  const balance=parseFloat(c.balance||0);
+
+  return `
+  <div class="detail-header">
+    <div class="detail-avatar ${avColor(c.name)}">${initials(c.name)}</div>
+    <div class="detail-name">${fmt(c.name)}</div>
+    <div class="detail-sub">${fmt(c.position)} ${c.employer?'· '+c.employer:''}</div>
+    <div class="detail-badges">${statusBadge(c.status)}<span class="badge badge-blue">${fmt(c.location)}</span></div>
+  </div>
+  <div style="display:flex;gap:8px;padding:12px 16px;">
+    <button class="btn btn-primary" style="flex:1" onclick="editCandidate('${c.id}')">Edit</button>
+    <button class="btn btn-ghost btn-sm" onclick="waCandidate('${c.id}')">💬 WhatsApp</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteCandidate('${c.id}')">Delete</button>
+  </div>
+
+  <div class="section-title">Personal</div>
+  <div class="card" style="padding:0 16px;">
+    <div class="info-row"><span class="info-label">Phone</span><span class="info-val">${v('phone')}</span></div>
+    <div class="info-row"><span class="info-label">Nationality</span><span class="info-val">${v('nationality')}</span></div>
+    <div class="info-row"><span class="info-label">Passport No.</span><span class="info-val">${v('passport')}</span></div>
+    <div class="info-row"><span class="info-label">Visa Status</span><span class="info-val">${v('visa_status')}</span></div>
+    <div class="info-row"><span class="info-label">Interview Date</span><span class="info-val">${fmtDate(c.interview_date)}</span></div>
+    <div class="info-row"><span class="info-label">Offer Status</span><span class="info-val">${v('offer_status')}</span></div>
+    <div class="info-row"><span class="info-label">Departure Date</span><span class="info-val">${fmtDate(c.departure)}</span></div>
+  </div>
+
+  <div class="section-title">Financial</div>
+  <div class="card" style="padding:0 16px;">
+    <div class="info-row"><span class="info-label">Service Charge</span><span class="info-val">${fmtAED(c.charge)}</span></div>
+    <div class="info-row"><span class="info-label">Paid</span><span class="info-val" style="color:var(--green)">${fmtAED(c.paid)}</span></div>
+    <div class="info-row"><span class="info-label">Balance Due</span><span class="info-val" style="color:${balance>0?'var(--red)':'var(--green)'};font-weight:700">${fmtAED(balance)}</span></div>
+  </div>
+
+  ${c.notes?`<div class="section-title">Notes</div><div class="card"><p style="font-size:.82rem;line-height:1.6;color:var(--text)">${c.notes}</p></div>`:''}
+  <div class="gap"></div>`;
+}
+
+// ═══ CANDIDATE FORM ═══
+function renderCandidateForm(id){
+  const c=id?db.candidates.find(x=>x.id===id)||{}:{};
+  const v=f=>c[f]||'';
+  return `
+  <div class="form-wrap" style="padding-top:16px;">
+    <div class="form-section">Basic Info</div>
+    <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="f-name" value="${v('name')}" placeholder="Full legal name"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="f-phone" value="${v('phone')}" placeholder="+977..."/></div>
+      <div class="form-group"><label class="form-label">Nationality</label><input class="form-input" id="f-nationality" value="${v('nationality')}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Position</label><input class="form-input" id="f-position" value="${v('position')}" placeholder="e.g. Driver"/></div>
+      <div class="form-group"><label class="form-label">Employer</label><input class="form-input" id="f-employer" value="${v('employer')}"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-input" id="f-status">${['Active','Pending','Interview','Offer','Deployed','Rejected','On Hold','Completed'].map(s=>`<option ${v('status')===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label class="form-label">Location</label>
+        <select class="form-input" id="f-location">${['Nepal','Local UAE','Other'].map(s=>`<option ${v('location')===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+    </div>
+
+    <div class="form-section">Documents</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Passport No.</label><input class="form-input" id="f-passport" value="${v('passport')}"/></div>
+      <div class="form-group"><label class="form-label">Visa Status</label>
+        <select class="form-input" id="f-visa_status">${['Not Applied','Applied','Approved','Stamped','Expired'].map(s=>`<option ${v('visa_status')===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Interview Date</label><input type="date" class="form-input" id="f-interview_date" value="${v('interview_date')}"/></div>
+      <div class="form-group"><label class="form-label">Offer Status</label>
+        <select class="form-input" id="f-offer_status">${['Not Issued','Issued','Accepted','Declined'].map(s=>`<option ${v('offer_status')===s?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Departure Date</label><input type="date" class="form-input" id="f-departure" value="${v('departure')}"/></div>
+
+    <div class="form-section">Financial</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Service Charge (AED)</label><input type="number" class="form-input" id="f-charge" value="${v('charge')}" oninput="calcBal()"/></div>
+      <div class="form-group"><label class="form-label">Paid (AED)</label><input type="number" class="form-input" id="f-paid" value="${v('paid')}" oninput="calcBal()"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Balance Due (AED)</label><input type="number" class="form-input" id="f-balance" value="${v('balance')}" readonly style="color:var(--orange)"/></div>
+
+    <div class="form-section">Notes</div>
+    <div class="form-group"><textarea class="form-input" id="f-notes" placeholder="Internal notes...">${v('notes')}</textarea></div>
+
+    <button class="btn btn-primary" onclick="saveCandidate('${id||''}')">💾 ${id?'Update':'Save'} Candidate</button>
+    <div class="gap"></div>
+  </div>`;
+}
+
+function calcBal(){
+  const charge=parseFloat(document.getElementById('f-charge')?.value||0);
+  const paid=parseFloat(document.getElementById('f-paid')?.value||0);
+  const el=document.getElementById('f-balance');
+  if(el) el.value=(charge-paid).toFixed(2);
+}
+
+function saveCandidate(id){
+  const g=i=>document.getElementById(i)?.value||'';
+  const data={name:g('f-name'),phone:g('f-phone'),nationality:g('f-nationality'),position:g('f-position'),employer:g('f-employer'),status:g('f-status'),location:g('f-location'),passport:g('f-passport'),visa_status:g('f-visa_status'),interview_date:g('f-interview_date'),offer_status:g('f-offer_status'),departure:g('f-departure'),charge:g('f-charge'),paid:g('f-paid'),balance:g('f-balance'),notes:g('f-notes')};
+  if(!data.name){toast('Name is required','err');return;}
+  if(id){const idx=db.candidates.findIndex(c=>c.id===id);db.candidates[idx]={...db.candidates[idx],...data};toast('Candidate updated ✓');}
+  else{data.id=uid('C');data.created=Date.now();db.candidates.push(data);toast('Candidate saved ✓');}
+  save();goPage('candidates');
+}
+
+function editCandidate(id){goPage('add-candidate-edit',id);document.getElementById('header-title').textContent='Edit Candidate';document.getElementById('screen').innerHTML=`<div class="page-enter">${renderCandidateForm(id)}</div>`;bindEvents();}
+function deleteCandidate(id){if(confirm('Delete this candidate?')){db.candidates=db.candidates.filter(c=>c.id!==id);save();toast('Deleted');goPage('candidates');}}
+function waCandidate(id){const c=db.candidates.find(x=>x.id===id);if(!c)return;showSheet('WhatsApp Message',renderWAForCandidate(c));}
+
+// ═══ EMPLOYERS ═══
+function renderEmployers(){
+  const em=db.employers;
+  return `
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input placeholder="Search employers..." id="emp-search" oninput="filterEmployers(this)"/>
+    </div>
+  </div>
+  <div id="emp-list">
+  ${em.length===0?`<div class="empty"><div class="empty-icon">🏢</div><div class="empty-title">No Employers Yet</div><div class="empty-sub">Tap + to add your first client</div></div>`:`
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${em.map(e=>`
+      <div class="list-item" onclick="goPage('employer-detail','${e.id}')">
+        <div class="item-avatar av-blue" style="border-radius:10px;font-size:.75rem;">🏢</div>
+        <div class="item-body">
+          <div class="item-name">${fmt(e.name)}</div>
+          <div class="item-sub">${fmt(e.industry)} · ${fmt(e.location)}</div>
+        </div>
+        <div class="item-right">
+          <span class="badge badge-blue">${db.candidates.filter(c=>c.employer===e.name).length} staff</span>
+        </div>
+      </div>`).join('')}
+  </div>`}
+  </div>`;
+}
+
+function filterEmployers(input){
+  const q=input.value.toLowerCase();
+  const filtered=db.employers.filter(e=>JSON.stringify(e).toLowerCase().includes(q));
+  document.getElementById('emp-list').innerHTML=filtered.length===0
+    ?`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No results</div></div>`
+    :`<div class="card" style="padding:0;overflow:hidden;">${filtered.map(e=>`<div class="list-item" onclick="goPage('employer-detail','${e.id}')"><div class="item-avatar av-blue" style="border-radius:10px">🏢</div><div class="item-body"><div class="item-name">${fmt(e.name)}</div><div class="item-sub">${fmt(e.industry)}</div></div></div>`).join('')}</div>`;
+}
+
+function renderEmployerDetail(id){
+  const e=db.employers.find(x=>x.id===id);
+  if(!e) return `<div class="empty"><div class="empty-title">Not found</div></div>`;
+  const linked=db.candidates.filter(c=>c.employer===e.name);
+  return `
+  <div class="detail-header">
+    <div class="detail-avatar av-blue" style="font-size:1.5rem">🏢</div>
+    <div class="detail-name">${fmt(e.name)}</div>
+    <div class="detail-sub">${fmt(e.industry)} · ${fmt(e.location)}</div>
+    <div class="detail-badges"><span class="badge badge-blue">${linked.length} Candidates</span></div>
+  </div>
+  <div style="display:flex;gap:8px;padding:12px 16px;">
+    <button class="btn btn-primary" style="flex:1" onclick="editEmployer('${e.id}')">Edit</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteEmployer('${e.id}')">Delete</button>
+  </div>
+  <div class="section-title">Contact Info</div>
+  <div class="card" style="padding:0 16px;">
+    <div class="info-row"><span class="info-label">Contact Person</span><span class="info-val">${e.contact||'—'}</span></div>
+    <div class="info-row"><span class="info-label">Phone</span><span class="info-val">${e.phone||'—'}</span></div>
+    <div class="info-row"><span class="info-label">Email</span><span class="info-val">${e.email||'—'}</span></div>
+    <div class="info-row"><span class="info-label">Location</span><span class="info-val">${e.location||'—'}</span></div>
+    <div class="info-row"><span class="info-label">License No.</span><span class="info-val">${e.license||'—'}</span></div>
+  </div>
+  ${linked.length?`
+  <div class="section-title">Linked Candidates</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${linked.map(c=>`<div class="list-item" onclick="goPage('candidate-detail','${c.id}')"><div class="item-avatar ${avColor(c.name)}">${initials(c.name)}</div><div class="item-body"><div class="item-name">${c.name}</div><div class="item-sub">${c.position}</div></div><div class="item-right">${statusBadge(c.status)}</div></div>`).join('')}
+  </div>`:''}
+  <div class="gap"></div>`;
+}
+
+function renderEmployerForm(id){
+  const e=id?db.employers.find(x=>x.id===id)||{}:{};
+  const v=f=>e[f]||'';
+  return `
+  <div class="form-wrap" style="padding-top:16px;">
+    <div class="form-section">Company Info</div>
+    <div class="form-group"><label class="form-label">Company Name *</label><input class="form-input" id="e-name" value="${v('name')}" placeholder="Company name"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Industry</label><input class="form-input" id="e-industry" value="${v('industry')}" placeholder="e.g. Construction"/></div>
+      <div class="form-group"><label class="form-label">Location (UAE)</label><input class="form-input" id="e-location" value="${v('location')}" placeholder="e.g. Dubai"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Trade License No.</label><input class="form-input" id="e-license" value="${v('license')}"/></div>
+
+    <div class="form-section">Contact</div>
+    <div class="form-group"><label class="form-label">Contact Person</label><input class="form-input" id="e-contact" value="${v('contact')}"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="e-phone" value="${v('phone')}"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="e-email" value="${v('email')}"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="e-notes">${v('notes')}</textarea></div>
+    <button class="btn btn-primary" onclick="saveEmployer('${id||''}')">💾 ${id?'Update':'Save'} Employer</button>
+    <div class="gap"></div>
+  </div>`;
+}
+
+function saveEmployer(id){
+  const g=i=>document.getElementById(i)?.value||'';
+  const data={name:g('e-name'),industry:g('e-industry'),location:g('e-location'),license:g('e-license'),contact:g('e-contact'),phone:g('e-phone'),email:g('e-email'),notes:g('e-notes')};
+  if(!data.name){toast('Company name required','err');return;}
+  if(id){const idx=db.employers.findIndex(e=>e.id===id);db.employers[idx]={...db.employers[idx],...data};toast('Employer updated ✓');}
+  else{data.id=uid('E');data.created=Date.now();db.employers.push(data);toast('Employer saved ✓');}
+  save();goPage('employers');
+}
+function editEmployer(id){document.getElementById('header-title').textContent='Edit Employer';document.getElementById('screen').innerHTML=`<div class="page-enter">${renderEmployerForm(id)}</div>`;bindEvents();}
+function deleteEmployer(id){if(confirm('Delete this employer?')){db.employers=db.employers.filter(e=>e.id!==id);save();toast('Deleted');goPage('employers');}}
+
+// ═══ INVOICES ═══
+function renderInvoices(){
+  const inv=db.invoices;
+  const total=inv.reduce((a,i)=>a+parseFloat(i.amount||0),0);
+  const paid=inv.filter(i=>i.status==='Paid');
+  return `
+  <div style="padding:12px 16px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <div class="stat-card blue"><div class="stat-label">Total Invoices</div><div class="stat-val">${inv.length}</div></div>
+    <div class="stat-card green"><div class="stat-label">Revenue</div><div class="stat-val">${(total/1000).toFixed(1)}K</div><div class="stat-sub">AED · ${paid.length} paid</div></div>
+  </div>
+  <div class="gap"></div>
+  ${inv.length===0?`<div class="empty"><div class="empty-icon">🧾</div><div class="empty-title">No Invoices Yet</div><div class="empty-sub">Tap + to create your first invoice</div></div>`:`
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${inv.slice().sort((a,b)=>b.created-a.created).map(i=>`
+      <div class="list-item" onclick="goPage('invoice-detail','${i.id}')">
+        <div class="item-avatar" style="background:${i.status==='Paid'?'rgba(0,196,140,.1)':'rgba(255,153,0,.1)'};color:${i.status==='Paid'?'var(--green)':'var(--orange)'};font-size:1.2rem;border-radius:12px;">🧾</div>
+        <div class="item-body">
+          <div class="item-name">${i.id}</div>
+          <div class="item-sub">${fmt(i.client)} · ${fmtDate(i.date)}</div>
+        </div>
+        <div class="item-right">
+          <span style="font-weight:700;font-size:.82rem;color:${i.status==='Paid'?'var(--green)':'var(--text)'}">${fmtAED(i.amount)}</span>
+          <span class="badge ${i.status==='Paid'?'badge-green':i.status==='Overdue'?'badge-red':'badge-orange'}">${i.status||'Pending'}</span>
+        </div>
+      </div>`).join('')}
+  </div>`}`;
+}
+
+function renderInvoiceDetail(id){
+  const inv=db.invoices.find(x=>x.id===id);
+  if(!inv) return `<div class="empty"><div class="empty-title">Not found</div></div>`;
+  return `
+  <div class="invoice-header">
+    <div class="invoice-num">Invoice · ${inv.id}</div>
+    <div class="invoice-amount">${fmtAED(inv.amount)}</div>
+    <div style="font-size:.78rem;opacity:.6;margin-top:4px">${fmt(inv.client)} · ${fmtDate(inv.date)}</div>
+    <div style="margin-top:10px"><span class="badge ${inv.status==='Paid'?'badge-green':inv.status==='Overdue'?'badge-red':'badge-orange'}" style="font-size:.72rem;">${inv.status||'Pending'}</span></div>
+  </div>
+  <div style="display:flex;gap:8px;padding:12px 16px;">
+    <button class="btn btn-primary" style="flex:1" onclick="markPaid('${inv.id}')">✅ Mark as Paid</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteInvoice('${inv.id}')">Delete</button>
+  </div>
+  <div class="section-title">Line Items</div>
+  <div class="card">
+    ${(inv.items||[]).map(item=>`<div class="invoice-line"><span>${item.desc}</span><span>${fmtAED(item.amount)}</span></div>`).join('')||`<div class="invoice-line"><span>${fmt(inv.description)}</span><span>${fmtAED(inv.amount)}</span></div>`}
+    <div class="invoice-total"><span>Total</span><span>${fmtAED(inv.amount)}</span></div>
+  </div>
+  ${inv.notes?`<div class="section-title">Notes</div><div class="card"><p style="font-size:.82rem;line-height:1.6">${inv.notes}</p></div>`:''}
+  <div class="gap"></div>`;
+}
+
+function renderInvoiceForm(id){
+  const inv=id?db.invoices.find(x=>x.id===id)||{}:{};
+  const v=f=>inv[f]||'';
+  return `
+  <div class="form-wrap" style="padding-top:16px;">
+    <div class="form-section">Invoice Details</div>
+    <div class="form-group"><label class="form-label">Client / Employer *</label>
+      <select class="form-input" id="i-client">
+        <option value="">Select client</option>
+        ${db.employers.map(e=>`<option ${v('client')===e.name?'selected':''}>${e.name}</option>`).join('')}
+        <option value="__other__">Other (type below)</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Or type client name</label><input class="form-input" id="i-client-text" value="${v('client')}" placeholder="Client name"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="i-date" value="${v('date')||new Date().toISOString().slice(0,10)}"/></div>
+      <div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="i-due" value="${v('due')}"/></div>
+    </div>
+    <div class="form-section">Amount</div>
+    <div class="form-group"><label class="form-label">Service Description</label><input class="form-input" id="i-description" value="${v('description')}" placeholder="e.g. Recruitment fee for Driver"/></div>
+    <div class="form-group"><label class="form-label">Amount (AED) *</label><input type="number" class="form-input" id="i-amount" value="${v('amount')}" placeholder="0.00"/></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select class="form-input" id="i-status">${['Pending','Paid','Overdue','Cancelled'].map(s=>`<option ${v('status')===s?'selected':''}>${s}</option>`).join('')}</select>
+    </div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="i-notes">${v('notes')}</textarea></div>
+    <button class="btn btn-primary" onclick="saveInvoice('${id||''}')">💾 ${id?'Update':'Create'} Invoice</button>
+    <div class="gap"></div>
+  </div>`;
+}
+
+function saveInvoice(id){
+  const g=i=>document.getElementById(i)?.value||'';
+  const clientSel=g('i-client');
+  const client=clientSel&&clientSel!=='__other__'?clientSel:g('i-client-text');
+  const data={client,date:g('i-date'),due:g('i-due'),description:g('i-description'),amount:g('i-amount'),status:g('i-status'),notes:g('i-notes')};
+  if(!data.amount){toast('Amount required','err');return;}
+  if(id){const idx=db.invoices.findIndex(i=>i.id===id);db.invoices[idx]={...db.invoices[idx],...data};toast('Invoice updated ✓');}
+  else{data.id='INV-'+Date.now().toString().slice(-6);data.created=Date.now();db.invoices.push(data);toast('Invoice created ✓');}
+  save();goPage('invoices');
+}
+
+function markPaid(id){const idx=db.invoices.findIndex(i=>i.id===id);if(idx>=0){db.invoices[idx].status='Paid';save();toast('Marked as paid ✓');goPage('invoices');}}
+function deleteInvoice(id){if(confirm('Delete this invoice?')){db.invoices=db.invoices.filter(i=>i.id!==id);save();toast('Deleted');goPage('invoices');}}
+
+// ═══ TASKS ═══
+function renderTasks(){
+  const tasks=db.tasks||[];
+  const open=tasks.filter(t=>!t.done);
+  const done=tasks.filter(t=>t.done);
+  return `
+  <div style="padding:12px 16px 0">
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:var(--bg2);border-radius:var(--radius-sm);padding:14px;box-shadow:var(--shadow);text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:1.5rem;color:var(--p)">${open.length}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">Open</div>
+      </div>
+      <div style="flex:1;background:var(--bg2);border-radius:var(--radius-sm);padding:14px;box-shadow:var(--shadow);text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:1.5rem;color:var(--green)">${done.length}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">Done</div>
+      </div>
+    </div>
+  </div>
+  ${open.length===0&&done.length===0?`<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">No Tasks</div><div class="empty-sub">Tap + to add a task</div></div>`:`
+  ${open.length?`<div class="section-title">Open Tasks</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${open.map(t=>`
+      <div class="task-item">
+        <div class="task-priority" style="background:${t.priority==='High'?'var(--red)':t.priority==='Low'?'var(--muted2)':'var(--orange)'}"></div>
+        <div class="task-body">
+          <div class="task-title">${t.title}</div>
+          <div class="task-meta">${t.assignee||'Unassigned'} · ${fmtDate(t.due)}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button onclick="toggleTask('${t.id}')" style="background:var(--p3);border:none;border-radius:6px;padding:5px 10px;font-size:.72rem;color:var(--p);cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600">Done</button>
+          <button onclick="deleteTask('${t.id}')" style="background:rgba(255,92,92,.1);border:none;border-radius:6px;padding:5px 8px;font-size:.72rem;color:var(--red);cursor:pointer">✕</button>
+        </div>
+      </div>`).join('')}
+  </div>`:''}
+  ${done.length?`<div class="section-title">Completed</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${done.map(t=>`
+      <div class="task-item task-done" style="opacity:.6">
+        <div class="task-priority" style="background:var(--muted2)"></div>
+        <div class="task-body">
+          <div class="task-title">${t.title}</div>
+          <div class="task-meta">${t.assignee||''}</div>
+        </div>
+        <button onclick="toggleTask('${t.id}')" style="background:var(--bg3);border:none;border-radius:6px;padding:5px 8px;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif">Undo</button>
+      </div>`).join('')}
+  </div>`:''}
+  `}`;
+}
+
+function renderTaskForm(){
+  return `
+  <div class="form-wrap" style="padding-top:16px;">
+    <div class="form-section">New Task</div>
+    <div class="form-group"><label class="form-label">Task Title *</label><input class="form-input" id="t-title" placeholder="e.g. Follow up with employer"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Priority</label>
+        <select class="form-input" id="t-priority"><option>Normal</option><option>High</option><option>Low</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-input" id="t-due"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Assign To</label><input class="form-input" id="t-assignee" placeholder="Staff name"/></div>
+    <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="t-notes" rows="3" placeholder="Additional details..."></textarea></div>
+    <button class="btn btn-primary" onclick="saveTask()">💾 Add Task</button>
+    <div class="gap"></div>
+  </div>`;
+}
+
+function saveTask(){
+  const g=i=>document.getElementById(i)?.value||'';
+  const title=g('t-title');
+  if(!title){toast('Title required','err');return;}
+  const task={id:uid('T'),title,priority:g('t-priority'),due:g('t-due'),assignee:g('t-assignee'),notes:g('t-notes'),done:false,created:Date.now()};
+  db.tasks.push(task);save();toast('Task added ✓');goPage('tasks');
+}
+function toggleTask(id){const idx=db.tasks.findIndex(t=>t.id===id);if(idx>=0){db.tasks[idx].done=!db.tasks[idx].done;save();goPage('tasks');}}
+function deleteTask(id){db.tasks=db.tasks.filter(t=>t.id!==id);save();toast('Deleted');goPage('tasks');}
+
+// ═══ WHATSAPP TEMPLATES ═══
+const WA_TEMPLATES=[
+  {id:'interview',label:'Interview Invitation',icon:'📅',generate:(c)=>`Dear ${c?.name||'[Candidate Name]'},
+
+I hope this message finds you well. On behalf of *MAAS HR Consultancy*, we are pleased to invite you for an interview for the position of *${c?.position||'[Position]'}*.
+
+📅 Date: ${c?.interview_date?fmtDate(c.interview_date):'[Date]'}
+🏢 Employer: ${c?.employer||'[Employer]'}
+📍 Location: UAE
+
+Please confirm your availability at your earliest convenience.
+
+Best regards,
+MAAS HR Consultancy 🇦🇪`},
+  {id:'offer',label:'Offer Confirmation',icon:'✅',generate:(c)=>`Dear ${c?.name||'[Candidate Name]'},
+
+Congratulations! 🎉 We are delighted to inform you that you have been *selected* for the position of *${c?.position||'[Position]'}* with ${c?.employer||'[Employer]'}.
+
+Please review your offer details and confirm your acceptance within 3 working days.
+
+Documents required for processing:
+• Valid Passport (6+ months validity)
+• Educational Certificates
+• Medical Fitness Certificate
+• Recent Photographs
+
+We look forward to welcoming you to UAE. 🇦🇪
+
+MAAS HR Consultancy`},
+  {id:'visa',label:'Visa Update',icon:'🛂',generate:(c)=>`Dear ${c?.name||'[Candidate Name]'},
+
+We would like to update you on your visa status.
+
+Your UAE visa for the position of *${c?.position||'[Position]'}* is currently: *${c?.visa_status||'Under Process'}*
+
+We will notify you as soon as there are further updates. Please ensure all your documents are ready for submission.
+
+For any queries, please contact MAAS HR Consultancy.
+
+Thank you for your patience. 🙏`},
+  {id:'travel',label:'Travel Instructions',icon:'✈️',generate:(c)=>`Dear ${c?.name||'[Candidate Name]'},
+
+Your travel to UAE has been confirmed! ✈️
+
+🗓 Departure: ${c?.departure?fmtDate(c.departure):'[Date]'}
+🏢 Employer: ${c?.employer||'[Employer]'}
+📍 Reporting to: UAE
+
+Please ensure you carry:
+• Original Passport
+• Visa Copy
+• Offer Letter Copy
+• Medical Fitness Certificate
+• DOFE Approval Copy
+
+Contact us immediately upon arrival in UAE.
+
+Safe travels! 🇦🇪
+MAAS HR Consultancy`},
+  {id:'payment',label:'Payment Reminder',icon:'💰',generate:(c)=>`Dear ${c?.name||'[Candidate Name]'},
+
+This is a friendly reminder regarding your service fee payment.
+
+💼 Position: ${c?.position||'[Position]'}
+💰 Total Charge: ${fmtAED(c?.charge)||'[Amount]'}
+✅ Paid: ${fmtAED(c?.paid)||'AED 0'}
+⚠️ Balance Due: ${fmtAED(c?.balance)||'[Amount]'}
+
+Please clear the outstanding balance at your earliest convenience to proceed with your application.
+
+MAAS HR Consultancy
+Thank you.`},
+  {id:'general',label:'General Follow-up',icon:'📞',generate:(c)=>`Dear ${c?.name||'[Candidate Name]'},
+
+We hope you are doing well. This is a follow-up from *MAAS HR Consultancy* regarding your job application.
+
+Please get in touch with us at your earliest convenience so we can update you on the latest status of your application.
+
+We look forward to hearing from you. 
+
+MAAS HR Consultancy 🇦🇪`},
+];
+
+function renderWhatsApp(){
+  return `
+  <div class="gap"></div>
+  <div class="section-title">Select Candidate (Optional)</div>
+  <div style="padding:0 16px 12px;">
+    <select class="form-input" id="wa-candidate" onchange="updateWAPreview()">
+      <option value="">General template</option>
+      ${db.candidates.map(c=>`<option value="${c.id}">${c.name} — ${c.position||'—'}</option>`).join('')}
+    </select>
+  </div>
+  <div class="section-title">Templates</div>
+  ${WA_TEMPLATES.map(t=>`
+    <div class="wa-template">
+      <div class="wa-header">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span>${t.icon} ${t.label}</span>
+      </div>
+      <div class="wa-body">
+        <div class="wa-text" id="wa-text-${t.id}">${t.generate(null)}</div>
+      </div>
+      <div class="wa-actions">
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="copyWA('${t.id}')">📋 Copy</button>
+        <button class="btn btn-primary btn-sm" style="flex:1;background:#25D366" onclick="sendWA('${t.id}')">Send WhatsApp</button>
+      </div>
+    </div>`).join('')}
+  <div class="gap"></div>`;
+}
+
+function renderWAForCandidate(c){
+  return `<div style="padding:0 4px;">${WA_TEMPLATES.map(t=>`
+    <div style="margin-bottom:16px;">
+      <div style="font-weight:600;font-size:.82rem;margin-bottom:8px;color:var(--muted)">${t.icon} ${t.label}</div>
+      <div class="wa-text" style="margin-bottom:8px">${t.generate(c)}</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" style="flex:1" onclick="copyText(\`${t.generate(c).replace(/`/g,"'")}\`)">📋 Copy</button>
+        <button class="btn btn-primary btn-sm" style="flex:1;background:#25D366;border-radius:8px;" onclick="window.open('https://wa.me/${c.phone?.replace(/\D/g,'')}?text='+encodeURIComponent(\`${t.generate(c).replace(/`/g,"'")}\`),'_blank')">Send</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function updateWAPreview(){
+  const id=document.getElementById('wa-candidate')?.value;
+  const c=id?db.candidates.find(x=>x.id===id):null;
+  WA_TEMPLATES.forEach(t=>{
+    const el=document.getElementById('wa-text-'+t.id);
+    if(el) el.textContent=t.generate(c);
+  });
+}
+
+function copyWA(tid){
+  const id=document.getElementById('wa-candidate')?.value;
+  const c=id?db.candidates.find(x=>x.id===id):null;
+  const t=WA_TEMPLATES.find(x=>x.id===tid);
+  if(!t)return;
+  navigator.clipboard.writeText(t.generate(c)).then(()=>toast('Copied to clipboard!')).catch(()=>toast('Copy failed','err'));
+}
+
+function sendWA(tid){
+  const id=document.getElementById('wa-candidate')?.value;
+  const c=id?db.candidates.find(x=>x.id===id):null;
+  const t=WA_TEMPLATES.find(x=>x.id===tid);
+  if(!t)return;
+  const msg=encodeURIComponent(t.generate(c));
+  const phone=c?.phone?.replace(/\D/g,'')||'';
+  window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
+}
+
+function copyText(text){navigator.clipboard.writeText(text).then(()=>toast('Copied!')).catch(()=>toast('Failed','err'));}
+
+// ═══ DOCUMENT CHECKLIST ═══
+const CHECKLISTS={
+  nepal:[
+    {id:'passport',label:'Valid Passport (6+ months)',category:'Identity'},
+    {id:'photos',label:'Passport Photos (6 copies)',category:'Identity'},
+    {id:'citizenship',label:'Citizenship Certificate',category:'Identity'},
+    {id:'medical',label:'Medical Fitness Certificate',category:'Health'},
+    {id:'blood',label:'Blood Group Test Report',category:'Health'},
+    {id:'dofe',label:'DOFE Approval Letter',category:'Government'},
+    {id:'police',label:'Police Clearance Certificate',category:'Government'},
+    {id:'insurance',label:'Travel Insurance',category:'Government'},
+    {id:'edu_cert',label:'Educational Certificates',category:'Education'},
+    {id:'exp_cert',label:'Experience Certificates',category:'Employment'},
+    {id:'offer',label:'Offer Letter (Copy)',category:'Employment'},
+    {id:'contract',label:'Employment Contract (Signed)',category:'Employment'},
+    {id:'training',label:'Pre-departure Training Certificate',category:'Training'},
+  ],
+  uae:[
+    {id:'visa_stamp',label:'UAE Visa Stamped',category:'Visa'},
+    {id:'entry_permit',label:'Entry Permit Received',category:'Visa'},
+    {id:'labor_card',label:'Labour Card Applied',category:'Legal'},
+    {id:'eid_applied',label:'Emirates ID Applied',category:'Legal'},
+    {id:'eid_received',label:'Emirates ID Received',category:'Legal'},
+    {id:'medical_uae',label:'UAE Medical Done',category:'Health'},
+    {id:'accom',label:'Accommodation Arranged',category:'Logistics'},
+    {id:'bank_uae',label:'UAE Bank Account Opened',category:'Finance'},
+    {id:'reported',label:'Reported to Employer',category:'Employment'},
+    {id:'orientation',label:'Workplace Orientation Done',category:'Employment'},
+  ]
+};
+
+function renderChecklist(){
+  const sel=db.checklists||{};
+  return `
+  <div class="gap"></div>
+  <div style="display:flex;gap:10px;padding:0 16px;margin-bottom:4px;">
+    <button onclick="showChecklist('nepal',this)" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--p);background:var(--p3);color:var(--p);font-family:'Outfit',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;">🇳🇵 Nepal Pre-Departure</button>
+    <button onclick="showChecklist('uae',this)" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;">🇦🇪 UAE Arrival</button>
+  </div>
+  <div id="checklist-content">${renderChecklistContent('nepal')}</div>`;
+}
+
+function showChecklist(type, btn){
+  document.querySelectorAll('[onclick^="showChecklist"]').forEach(b=>{b.style.borderColor='var(--border)';b.style.background='transparent';b.style.color='var(--muted)';});
+  btn.style.borderColor='var(--p)';btn.style.background='var(--p3)';btn.style.color='var(--p)';
+  document.getElementById('checklist-content').innerHTML=renderChecklistContent(type);
+}
+
+function renderChecklistContent(type){
+  const items=CHECKLISTS[type];
+  const sel=db.checklists[type]||{};
+  const done=items.filter(i=>sel[i.id]).length;
+  const categories=[...new Set(items.map(i=>i.category))];
+  return `
+  <div style="padding:12px 16px 8px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:.82rem;color:var(--muted)">${done}/${items.length} completed</span>
+    <div style="height:6px;flex:1;margin:0 12px;background:var(--bg3);border-radius:3px;overflow:hidden;">
+      <div style="height:100%;width:${(done/items.length*100).toFixed(0)}%;background:var(--green);border-radius:3px;transition:.3s"></div>
+    </div>
+    <span style="font-size:.82rem;font-weight:700;color:var(--green)">${(done/items.length*100).toFixed(0)}%</span>
+  </div>
+  ${categories.map(cat=>`
+    <div class="section-title" style="padding-top:8px">${cat}</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      ${items.filter(i=>i.category===cat).map(item=>`
+        <div class="check-item" onclick="toggleCheck('${type}','${item.id}')">
+          <div class="check-box ${sel[item.id]?'checked':''}">
+            <svg viewBox="0 0 24 24" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div class="check-label ${sel[item.id]?'done':''}">${item.label}</div>
+          </div>
+        </div>`).join('')}
+    </div>`).join('')}
+  <div style="padding:12px 16px;">
+    <button class="btn btn-ghost" style="width:100%" onclick="clearChecklist('${type}')">Reset ${type==='nepal'?'Nepal':'UAE'} Checklist</button>
+  </div>`;
+}
+
+function toggleCheck(type, id){
+  if(!db.checklists[type]) db.checklists[type]={};
+  db.checklists[type][id]=!db.checklists[type][id];
+  save();
+  const items=CHECKLISTS[type];
+  const sel=db.checklists[type];
+  const done=items.filter(i=>sel[i.id]).length;
+  // update progress bar
+  const bars=document.querySelectorAll('[style*="background:var(--green)"]');
+  bars.forEach(b=>{if(b.style.height==='100%')b.style.width=(done/items.length*100).toFixed(0)+'%';});
+  // toggle check box
+  const box=event.currentTarget.querySelector('.check-box');
+  if(box){box.classList.toggle('checked',!!db.checklists[type][id]);}
+  const label=event.currentTarget.querySelector('.check-label');
+  if(label){label.classList.toggle('done',!!db.checklists[type][id]);}
+}
+
+function clearChecklist(type){if(confirm('Reset this checklist?')){db.checklists[type]={};save();goPage('checklist');}}
+
+// ═══ MORE MENU ═══
+function renderMore(){
+  const items=[
+    {icon:'✅',label:'Document Checklist',sub:'Pre-departure & UAE arrival',page:'checklist',color:'var(--purple)'},
+    {icon:'💬',label:'WhatsApp Templates',sub:'6 ready-to-send templates',page:'whatsapp',color:'#25D366'},
+    {icon:'📋',label:'Task Manager',sub:'Team tasks & follow-ups',page:'tasks',color:'var(--orange)'},
+    {icon:'📊',label:'Export Data',sub:'Backup all records',action:'exportData',color:'var(--p)'},
+    {icon:'📂',label:'Import Data',sub:'Restore from backup',action:'importData',color:'var(--dark)'},
+  ];
+  return `
+  <div class="gap"></div>
+  <div class="section-title">Tools</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    ${items.map(item=>`
+      <div class="list-item" onclick="${item.page?`goPage('${item.page}')`:item.action+'()'}">
+        <div class="item-avatar" style="background:rgba(0,0,0,.05);font-size:1.3rem;border-radius:12px;">${item.icon}</div>
+        <div class="item-body">
+          <div class="item-name">${item.label}</div>
+          <div class="item-sub">${item.sub}</div>
+        </div>
+        <svg class="item-chevron" viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`).join('')}
+  </div>
+
+  <div class="section-title">About</div>
+  <div class="card">
+    <div class="info-row"><span class="info-label">App</span><span class="info-val">MAAS HR Mobile</span></div>
+    <div class="info-row"><span class="info-label">Version</span><span class="info-val">1.0.0</span></div>
+    <div class="info-row"><span class="info-label">Total Candidates</span><span class="info-val">${db.candidates.length}</span></div>
+    <div class="info-row"><span class="info-label">Storage</span><span class="info-val">${(JSON.stringify(db).length/1024).toFixed(1)} KB used</span></div>
+  </div>
+  <div style="padding:0 16px;">
+    <button class="btn btn-danger" style="width:100%;margin-top:4px;" onclick="clearAll()">🗑 Clear All Data</button>
+  </div>
+  <div class="gap"></div>`;
+}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`maas-mobile-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();toast('Backup exported ✓');
+}
+
+function importData(){
+  const input=document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange=e=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const imported=JSON.parse(ev.target.result);
+        if(imported.candidates){
+          ['candidates','employers','invoices','tasks'].forEach(k=>{
+            if(imported[k]) db[k]=[...db[k],...imported[k]];
+          });
+          save();toast(`Imported successfully ✓`);goPage('home');
+        }else throw new Error();
+      }catch(e){toast('Invalid backup file','err');}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function clearAll(){if(confirm('Delete ALL data permanently?')){db={candidates:[],employers:[],invoices:[],tasks:[],checklists:{}};save();toast('All data cleared');goPage('home');}}
+
+// ═══ SHEET ═══
+function showSheet(title, body){
+  document.getElementById('sheet-title').textContent=title;
+  document.getElementById('sheet-body').innerHTML=body;
+  document.getElementById('sheet-overlay').classList.add('open');
+}
+function closeSheet(){document.getElementById('sheet-overlay').classList.remove('open');}
+
+function openSearch(){
+  showSheet('Search Everything',`
+    <div style="padding:0 16px 12px;">
+      <div class="search-box"><svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input id="global-search" placeholder="Search candidates, employers..." autofocus oninput="globalSearch(this.value)"/></div>
+    </div>
+    <div id="global-results"></div>`);
+  setTimeout(()=>document.getElementById('global-search')?.focus(),100);
+}
+
+function globalSearch(q){
+  const el=document.getElementById('global-results');
+  if(!q){el.innerHTML='';return;}
+  const lq=q.toLowerCase();
+  const cs=db.candidates.filter(c=>JSON.stringify(c).toLowerCase().includes(lq));
+  const em=db.employers.filter(e=>JSON.stringify(e).toLowerCase().includes(lq));
+  el.innerHTML=`
+    ${cs.length?`<div class="section-title">Candidates</div><div class="card" style="padding:0;overflow:hidden;">${cs.slice(0,5).map(c=>`<div class="list-item" onclick="closeSheet();goPage('candidate-detail','${c.id}')"><div class="item-avatar ${avColor(c.name)}">${initials(c.name)}</div><div class="item-body"><div class="item-name">${c.name}</div><div class="item-sub">${c.position}</div></div>${statusBadge(c.status)}</div>`).join('')}</div>`:''}
+    ${em.length?`<div class="section-title">Employers</div><div class="card" style="padding:0;overflow:hidden;">${em.slice(0,3).map(e=>`<div class="list-item" onclick="closeSheet();goPage('employer-detail','${e.id}')"><div style="font-size:1.3rem;margin-right:4px">🏢</div><div class="item-body"><div class="item-name">${e.name}</div><div class="item-sub">${e.industry}</div></div></div>`).join('')}</div>`:''}
+    ${!cs.length&&!em.length?`<div class="empty"><div class="empty-icon">🔍</div><div class="empty-title">No results</div></div>`:''}`;
+}
+
+function bindEvents(){
+  // nothing extra needed — all handlers are inline
+}
+
+// ═══ INIT ═══
+goPage('home');
+</script>
+</body>
+</html>
